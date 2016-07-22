@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="share_movie">Share Movie</string>
+    <string name="movie">Movie</string>
+    <string name="movie_title">Movie Title</string>
+    <string name="toggle_movies">Toggle Movies Type</string>
+
+    <string name="title">Title</string>
+    <string name="genre">Genre</string>
+    <string name="rating">Rating</string>
+    <string name="release_date">Release Date</string>
+
+    <string name="plot">Plot</string>
+
+    <string name="movies_empty">No movies to show</string>
+    <string name="movies_load_retry">Retry</string>
+    <string name="movies_load_success">Movies Loaded</string>
+    <string name="movies_load_error">Loading Failed</string>
+    <string name="image_load_error" translatable="false">Error while loading image.</string>
+
+    <string-array name="loading_messages">
+        <item>Loading the Projector&#8230;</item>
+        <item>Preparing the Lights&#8230;</item>
+        <item>Handling the Camera&#8230;</item>
+        <item>Checking Sound&#8230;</item>
+        <item>Unloading the Action&#8230;</item>
+        <item>Cloning Chuck Norris&#8230;</item>
+        <item>Slaying some Dragons&#8230;</item>
+        <item>Killing the Krakken&#8230;</item>
+        <item>Some Netflix and Chilling&#8230;</item>
+        <item>Finding the Lost Tomb&#8230;</item>
+        <item>Punching some villains&#8230;</item>
+        <item>Destroying Cities&#8230;</item>
+        <item>Saving innocent People&#8230;</item>
+        <item>Jumping off Trains&#8230;</item>
+        <item>Travelling to Future&#8230;</item>
+        <item>Escaping from Past&#8230;</item>
+        <item>Winning the hearts of People&#8230;</item>
+    </string-array>
+
+    <string name="dummy_date" translatable="false">2016&#8211;4&#8211;23</string>
+    <string name="dummy_rating" translatable="false">4.5/10</string>
+    <string name="dummy_genre" translatable="false">Action, Comedy, Sci-Fi</string>
+    <string name="dummy_plot" translatable="false">Once, there lived a great Android Developer, who tried
+    his best to follow the coding standards set by professionals. But, for the world, his good practices were
+    an eyesore. Will he survive the fiery criticism of the cruel world, or will succumb to his &#8230;</string>
+</resources>
