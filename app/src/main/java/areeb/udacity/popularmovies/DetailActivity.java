@@ -19,20 +19,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 import areeb.udacity.popularmovies.model.Movie;
 import areeb.udacity.popularmovies.utils.Utils;
+import butterknife.BindColor;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private CollapsingToolbarLayout collapsingToolbar;
     private Movie movie;
+
+    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
+    @BindView(R.id.plot) TextView plot;
+    @BindView(R.id.fab) FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -42,15 +51,12 @@ public class DetailActivity extends AppCompatActivity {
         if (getIntent().hasExtra(Movie.TAG)) {
             movie = getIntent().getParcelableExtra(Movie.TAG);
 
-            collapsingToolbar = ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar));
             collapsingToolbar.setTitle(movie.getTitle());
             collapsingToolbar.setBackgroundColor(getResources().getColor(R.color.color_primary));
             collapsingToolbar.setContentScrimColor(getResources().getColor(R.color.color_primary));
 
-            TextView plot = (TextView) findViewById(R.id.plot);
             plot.setText(movie.getPlot());
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -70,6 +76,18 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+
+    @BindView(R.id.plotHolder) TextView plotHolder;
+    @BindView(R.id.infoPanel) RelativeLayout infoPanel;
+    @BindView(R.id.date) TextView date;
+    @BindView(R.id.dateIcon) ImageView dateIcon;
+    @BindView(R.id.rate) TextView rate;
+    @BindView(R.id.rateIcon) ImageView rateIcon;
+    @BindView(R.id.genre) TextView genre;
+    @BindView(R.id.genreIcon) ImageView genreIcon;
+
+    @BindColor(R.color.color_primary) int color;
+    @BindColor(R.color.basic_dark_transparent) int titleColor;
     private void setDetails(ImageView imageView) {
         if (imageView == null)
             return;
@@ -80,9 +98,6 @@ public class DetailActivity extends AppCompatActivity {
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getVibrantSwatch();
 
-                int color = getResources().getColor(R.color.color_primary);
-                int titleColor = getResources().getColor(R.color.basic_dark_transparent);
-
                 if (swatch != null) {
                     color = swatch.getRgb();
                     titleColor = swatch.getTitleTextColor();
@@ -92,32 +107,24 @@ public class DetailActivity extends AppCompatActivity {
                 collapsingToolbar.setStatusBarScrimColor(Utils.getDarkColor(color));
                 collapsingToolbar.setContentScrimColor(color);
 
-                TextView plotHolder = (TextView) findViewById(R.id.plotHolder);
                 plotHolder.setBackgroundColor(color);
                 plotHolder.setTextColor(titleColor);
 
-                RelativeLayout infoPanel = (RelativeLayout) findViewById(R.id.infoPanel);
                 infoPanel.setBackgroundColor(color);
 
-                TextView date = (TextView) findViewById(R.id.date);
                 date.setText(movie.getReleaseDate());
                 date.setTextColor(titleColor);
 
-                ImageView dateIcon = (ImageView) findViewById(R.id.dateIcon);
                 Utils.setTint(dateIcon, titleColor);
 
-                TextView rate = (TextView) findViewById(R.id.rate);
                 rate.setText(String.valueOf(movie.getRating()) + "/10");
                 rate.setTextColor(titleColor);
 
-                ImageView rateIcon = (ImageView) findViewById(R.id.rateIcon);
                 Utils.setTint(rateIcon, titleColor);
 
-                TextView genre = (TextView) findViewById(R.id.genre);
                 genre.setText(movie.getGenres());
                 genre.setTextColor(titleColor);
 
-                ImageView genreIcon = (ImageView) findViewById(R.id.genreIcon);
                 Utils.setTint(genreIcon, titleColor);
 
             }
@@ -125,10 +132,9 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    @BindView(R.id.poster) ImageView poster;
+    @BindView(R.id.backdrop) ImageView backdrop;
     private void loadImages() {
-        final ImageView poster = (ImageView) findViewById(R.id.poster);
-
-        final ImageView backdrop = (ImageView) findViewById(R.id.backdrop);
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)
             backdrop.setBackgroundResource(R.drawable.vector_movies);

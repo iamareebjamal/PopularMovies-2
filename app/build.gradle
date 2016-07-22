@@ -7,6 +7,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 repositories {
     jcenter()
@@ -23,7 +24,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "API_KEY", '"API_KEY_HERE"'
+        buildConfigField "String", "API_KEY", '***REMOVED***'
 
         generatedDensities = []
     }
@@ -54,4 +55,6 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton:butterknife:8.2.1'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
 }

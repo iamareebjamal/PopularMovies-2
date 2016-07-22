@@ -16,6 +16,8 @@ import areeb.udacity.popularmovies.R;
 import areeb.udacity.popularmovies.model.Movie;
 import areeb.udacity.popularmovies.model.Movies;
 import areeb.udacity.popularmovies.utils.Utils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -94,17 +96,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     }
 
     public class MovieHolder extends RecyclerView.ViewHolder {
-        protected CardView rootView;
-        protected ImageView posterHolder;
-        protected TextView movieTitle;
-        protected LinearLayout moviePanel;
+        @BindView(R.id.rootcard) CardView rootView;
+        @BindView(R.id.poster_holder) ImageView posterHolder;
+        @BindView(R.id.movie_title) TextView movieTitle;
+        @BindView(R.id.movie_panel) LinearLayout moviePanel;
 
         public MovieHolder(View itemView) {
             super(itemView);
-            rootView = (CardView) itemView.findViewById(R.id.rootcard);
-            posterHolder = (ImageView) itemView.findViewById(R.id.poster_holder);
-            movieTitle = (TextView) itemView.findViewById(R.id.movie_title);
-            moviePanel = (LinearLayout) itemView.findViewById(R.id.movie_panel);
+            ButterKnife.bind(this, itemView);
         }
 
     }

@@ -6,20 +6,22 @@ import android.support.v7.widget.Toolbar;
 import areeb.udacity.popularmovies.api.Sort;
 import areeb.udacity.popularmovies.fragment.MoviesFragment;
 import areeb.udacity.popularmovies.utils.Utils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String FRAGMENT_KEY = "movie_fragment";
 
     private MoviesFragment moviesFragment;
-    private Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
