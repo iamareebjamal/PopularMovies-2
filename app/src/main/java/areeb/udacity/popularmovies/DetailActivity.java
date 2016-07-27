@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -17,15 +18,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import areeb.udacity.popularmovies.model.Movie;
+import areeb.udacity.popularmovies.model.*;
 import areeb.udacity.popularmovies.utils.Utils;
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import retrofit2.Call;
+import retrofit2.Response;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements retrofit2.Callback<Trailers> {
 
     private Movie movie;
 
@@ -73,6 +75,8 @@ public class DetailActivity extends AppCompatActivity {
             });
 
             loadImages();
+            Call<Trailers> call = movie.getTrailersCall();
+            call.enqueue(this);
         }
     }
 
@@ -139,7 +143,7 @@ public class DetailActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)
             backdrop.setBackgroundResource(R.drawable.vector_movies);
 
-        Picasso.with(this).load(movie.getBackdrop()).into(backdrop, new Callback() {
+        Picasso.with(this).load(movie.getBackdrop()).into(backdrop, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
                 // Reset the margin
@@ -155,7 +159,7 @@ public class DetailActivity extends AppCompatActivity {
         });
 
 
-        Picasso.with(this).load(movie.getPoster()).into(poster, new Callback() {
+        Picasso.with(this).load(movie.getPoster()).into(poster, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
                 setDetails(poster);
@@ -178,4 +182,22 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onResponse(Call<Trailers> call, Response<Trailers> response) {
+        if(response.isSuccessful()){
+            Trailers trailers = response.body();
+            String s = "";
+            for(Trailer trailer : trailers.getTrailers()){
+                s+=trailer.getKey()+"\n";
+            }
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage(s);
+            alert.show();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<Trailers> call, Throwable t) {
+
+    }
 }

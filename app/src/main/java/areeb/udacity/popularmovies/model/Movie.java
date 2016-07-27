@@ -8,8 +8,11 @@ package areeb.udacity.popularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseArray;
+import areeb.udacity.popularmovies.BuildConfig;
+import areeb.udacity.popularmovies.api.MovieService;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import retrofit2.Call;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,6 +211,14 @@ public class Movie implements Parcelable {
                 "\nRating : " + getRating() + "/10" +
                 "\nRelease Date : " + getReleaseDate() +
                 "\n\n\n" + getPlot();
+    }
+
+    public Call<Reviews> getReviewsCall(){
+        return MovieService.getReviewsCall(id);
+    }
+
+    public Call<Trailers> getTrailersCall(){
+        return MovieService.getTrailersCall(id);
     }
 
 

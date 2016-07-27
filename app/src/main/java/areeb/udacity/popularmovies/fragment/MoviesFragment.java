@@ -169,7 +169,7 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
 
     @Override
     public void onFailure(final Call<Movies> call, Throwable t) {
-        Snackbar failed = Snackbar.make(rootView, getActivity().getString(R.string.image_load_error), Snackbar.LENGTH_INDEFINITE);
+        Snackbar failed = Snackbar.make(rootView, getActivity().getString(R.string.movies_load_retry), Snackbar.LENGTH_INDEFINITE);
         failed.setAction(getActivity().getString(R.string.movies_load_retry), new View.OnClickListener() {
 
             @Override
