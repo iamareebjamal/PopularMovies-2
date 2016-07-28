@@ -15,6 +15,12 @@ public class Trailers {
     @Expose
     private List<Trailer> trailers = new ArrayList<>();
 
+    public Trailers(){}
+
+    public Trailers(List<Trailer> trailers){
+        this.trailers = trailers;
+    }
+
     public Integer getId() {
         return id;
     }

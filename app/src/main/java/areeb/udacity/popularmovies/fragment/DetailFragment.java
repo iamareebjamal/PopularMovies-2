@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,9 +23,7 @@ import areeb.udacity.popularmovies.DetailActivity;
 import areeb.udacity.popularmovies.R;
 import areeb.udacity.popularmovies.adapter.ReviewAdapter;
 import areeb.udacity.popularmovies.adapter.TrailerAdapter;
-import areeb.udacity.popularmovies.model.Movie;
-import areeb.udacity.popularmovies.model.Reviews;
-import areeb.udacity.popularmovies.model.Trailers;
+import areeb.udacity.popularmovies.model.*;
 import areeb.udacity.popularmovies.utils.Utils;
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -34,14 +33,57 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailFragment extends Fragment {
-    private Movie movie;
+import java.util.ArrayList;
 
-    public DetailFragment(){
+public class DetailFragment extends Fragment {
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.plot)
+    TextView plot;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.poster)
+    ImageView poster;
+    @BindView(R.id.backdrop)
+    ImageView backdrop;
+    @BindView(R.id.reviews)
+    RecyclerView reviewsRv;
+    @BindView(R.id.trailers)
+    RecyclerView trailersRv;
+    @BindView(R.id.plotHolder)
+    TextView plotHolder;
+    @BindView(R.id.infoPanel)
+    RelativeLayout infoPanel;
+    @BindView(R.id.date)
+    TextView date;
+    @BindView(R.id.dateIcon)
+    ImageView dateIcon;
+    @BindView(R.id.rate)
+    TextView rate;
+    @BindView(R.id.rateIcon)
+    ImageView rateIcon;
+    @BindView(R.id.genre)
+    TextView genre;
+    @BindView(R.id.genreIcon)
+    ImageView genreIcon;
+    @BindView(R.id.trailerHolder)
+    TextView trailerHolder;
+    @BindView(R.id.reviewHolder)
+    TextView reviewHolder;
+    @BindColor(R.color.color_primary)
+    int color;
+    @BindColor(R.color.basic_dark_transparent)
+    int titleColor;
+    private Movie movie;
+    private Trailers trailers;
+    private Reviews reviews;
+    public DetailFragment() {
 
     }
 
-    public static DetailFragment newInstance(Movie movie){
+    public static DetailFragment newInstance(Movie movie) {
         DetailFragment fragment = new DetailFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(Movie.TAG, movie);
@@ -50,38 +92,62 @@ public class DetailFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null && getArguments().containsKey(Movie.TAG)) {
+            movie = getArguments().getParcelable(Movie.TAG);
+        }
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(Trailer.TAG))
+                trailers = new Trailers((ArrayList) savedInstanceState.getParcelableArrayList(Trailer.TAG));
+
+            if (savedInstanceState.containsKey(Review.TAG))
+                reviews = new Reviews((ArrayList) savedInstanceState.getParcelableArrayList(Review.TAG));
+        }
+
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, rootView);
 
-        // If instantiated by activity
-        movie = getArguments().getParcelable(Movie.TAG);
-        if(movie!=null){
+        if (movie != null) {
             setupViews();
-            ((DetailActivity)getActivity()).setBackButton(toolbar);
+            ((DetailActivity) getActivity()).setBackButton(toolbar);
         }
 
         return rootView;
     }
 
-    public void setMovie(Movie movie){
+    public void setMovie(Movie movie) {
         this.movie = movie;
         setupViews();
     }
 
-    @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    @BindView(R.id.plot)
-    TextView plot;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
-    private void setupViews(){
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (trailers != null)
+            outState.putParcelableArrayList(Trailer.TAG, (ArrayList) trailers.getTrailers());
+        if (reviews != null)
+            outState.putParcelableArrayList(Review.TAG, (ArrayList) reviews.getReviews());
+    }
+
+    private void setupViews() {
         //Handle received data
-        if (movie!=null) {
+        if (movie != null) {
 
             collapsingToolbar.setTitle(movie.getTitle());
             collapsingToolbar.setBackgroundColor(getResources().getColor(R.color.color_primary));
@@ -110,9 +176,6 @@ public class DetailFragment extends Fragment {
         }
     }
 
-    @BindView(R.id.poster)
-    ImageView poster;
-    @BindView(R.id.backdrop) ImageView backdrop;
     private void loadImages() {
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)
@@ -146,21 +209,24 @@ public class DetailFragment extends Fragment {
         });
     }
 
-    @BindView(R.id.reviews)
-    RecyclerView reviewsRv;
-    private void loadReviews(){
+    private void loadReviews() {
         final ReviewAdapter reviewAdapter = new ReviewAdapter(getContext(), new Reviews());
         reviewsRv.setAdapter(reviewAdapter);
 
         reviewsRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (reviews != null) {
+            reviewAdapter.changeReviews(reviews);
+            return;
+        }
+
         final Call<Reviews> reviewsCall = movie.getReviewsCall();
         reviewsCall.enqueue(new Callback<Reviews>() {
             @Override
             public void onResponse(Call<Reviews> call, Response<Reviews> response) {
-                Reviews reviews = response.body();
+                reviews = response.body();
                 reviewAdapter.changeReviews(reviews);
 
-                if(reviews.getReviews().size()==0){
+                if (reviews.getReviews().size() == 0) {
                     reviewsRv.setVisibility(View.GONE);
                     reviewHolder.setText(R.string.no_review);
                 } else {
@@ -176,21 +242,24 @@ public class DetailFragment extends Fragment {
         });
     }
 
-    @BindView(R.id.trailers)
-    RecyclerView trailersRv;
-    private void loadTrailers(){
+    private void loadTrailers() {
         final TrailerAdapter trailerAdapter = new TrailerAdapter(getContext(), new Trailers());
         trailersRv.setAdapter(trailerAdapter);
 
         trailersRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (trailers != null) {
+            trailerAdapter.changeTrailers(trailers);
+            return;
+        }
+
         Call<Trailers> trailersCall = movie.getTrailersCall();
         trailersCall.enqueue(new Callback<Trailers>() {
             @Override
             public void onResponse(Call<Trailers> call, Response<Trailers> response) {
-                Trailers trailers = response.body();
+                trailers = response.body();
                 trailerAdapter.changeTrailers(trailers);
 
-                if(trailers.getTrailers().size()==0){
+                if (trailers.getTrailers().size() == 0) {
                     trailersRv.setVisibility(View.GONE);
                     trailerHolder.setText(R.string.no_trailer);
                 } else {
@@ -206,21 +275,6 @@ public class DetailFragment extends Fragment {
         });
     }
 
-    @BindView(R.id.plotHolder) TextView plotHolder;
-    @BindView(R.id.infoPanel)
-    RelativeLayout infoPanel;
-    @BindView(R.id.date) TextView date;
-    @BindView(R.id.dateIcon) ImageView dateIcon;
-    @BindView(R.id.rate) TextView rate;
-    @BindView(R.id.rateIcon) ImageView rateIcon;
-    @BindView(R.id.genre) TextView genre;
-    @BindView(R.id.genreIcon) ImageView genreIcon;
-
-    @BindView(R.id.trailerHolder) TextView trailerHolder;
-    @BindView(R.id.reviewHolder) TextView reviewHolder;
-
-    @BindColor(R.color.color_primary) int color;
-    @BindColor(R.color.basic_dark_transparent) int titleColor;
     private void setDetails(ImageView imageView) {
         if (imageView == null)
             return;

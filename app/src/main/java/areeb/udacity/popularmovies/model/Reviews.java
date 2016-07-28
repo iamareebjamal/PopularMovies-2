@@ -24,6 +24,12 @@ public class Reviews {
     @Expose
     private Integer totalResults;
 
+    public Reviews(){}
+
+    public Reviews(List<Review> reviews){
+        this.reviews = reviews;
+    }
+
     public Integer getId() {
         return id;
     }
