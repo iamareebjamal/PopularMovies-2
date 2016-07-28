@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Review implements Parcelable {
 
-    public static final String TAG = "Trailer";
+    public static final String TAG = "Review";
 
     @SerializedName("id")
     @Expose
