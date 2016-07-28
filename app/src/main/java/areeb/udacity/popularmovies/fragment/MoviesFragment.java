@@ -21,6 +21,8 @@ import areeb.udacity.popularmovies.api.Sort;
 import areeb.udacity.popularmovies.model.Movie;
 import areeb.udacity.popularmovies.model.Movies;
 import areeb.udacity.popularmovies.utils.Utils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,6 +71,7 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
         this.rootView = rootView;
+        ButterKnife.bind(this, rootView);
 
         setupViews();
         return rootView;
@@ -96,12 +99,11 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
         outState.putParcelableArrayList(MOVIE_KEY, (ArrayList) movies.getMovies());
     }
 
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.movie_list) RecyclerView recyclerView;
     private void setupViews() {
         int columns = 2;
 
-        final FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.movie_list);
         movies = new Movies();
         movieAdapter = new MovieAdapter(getActivity(), movies);
         recyclerView.setAdapter(movieAdapter);

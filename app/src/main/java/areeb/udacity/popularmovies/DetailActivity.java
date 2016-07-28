@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import areeb.udacity.popularmovies.adapter.TrailerAdapter;
 import areeb.udacity.popularmovies.model.*;
 import areeb.udacity.popularmovies.utils.Utils;
 import butterknife.BindColor;
@@ -25,9 +28,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailActivity extends AppCompatActivity implements retrofit2.Callback<Trailers> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class DetailActivity extends AppCompatActivity {
 
     private Movie movie;
 
@@ -75,8 +82,7 @@ public class DetailActivity extends AppCompatActivity implements retrofit2.Callb
             });
 
             loadImages();
-            Call<Trailers> call = movie.getTrailersCall();
-            call.enqueue(this);
+            loadTrailers();
         }
     }
 
@@ -89,6 +95,8 @@ public class DetailActivity extends AppCompatActivity implements retrofit2.Callb
     @BindView(R.id.rateIcon) ImageView rateIcon;
     @BindView(R.id.genre) TextView genre;
     @BindView(R.id.genreIcon) ImageView genreIcon;
+
+    @BindView(R.id.trailerHolder) TextView trailerHolder;
 
     @BindColor(R.color.color_primary) int color;
     @BindColor(R.color.basic_dark_transparent) int titleColor;
@@ -113,6 +121,9 @@ public class DetailActivity extends AppCompatActivity implements retrofit2.Callb
 
                 plotHolder.setBackgroundColor(color);
                 plotHolder.setTextColor(titleColor);
+
+                trailerHolder.setBackgroundColor(color);
+                trailerHolder.setTextColor(titleColor);
 
                 infoPanel.setBackgroundColor(color);
 
@@ -171,6 +182,36 @@ public class DetailActivity extends AppCompatActivity implements retrofit2.Callb
         });
     }
 
+    @BindView(R.id.trailers)
+    RecyclerView trailersRv;
+    private void loadTrailers(){
+        final TrailerAdapter trailerAdapter = new TrailerAdapter(this, new Trailers());
+        trailersRv.setAdapter(trailerAdapter);
+
+        trailersRv.setLayoutManager(new LinearLayoutManager(this));
+        Call<Trailers> trailersCall = movie.getTrailersCall();
+        trailersCall.enqueue(new Callback<Trailers>() {
+            @Override
+            public void onResponse(Call<Trailers> call, Response<Trailers> response) {
+                Trailers trailers = response.body();
+                trailerAdapter.changeTrailers(trailers);
+
+                if(trailers.getTrailers().size()==0){
+                    trailersRv.setVisibility(View.GONE);
+                    trailerHolder.setText(R.string.no_trailer);
+                } else {
+                    trailersRv.setVisibility(View.VISIBLE);
+                    trailerHolder.setText(R.string.trailer);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Trailers> call, Throwable t) {
+
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -182,22 +223,5 @@ public class DetailActivity extends AppCompatActivity implements retrofit2.Callb
     }
 
 
-    @Override
-    public void onResponse(Call<Trailers> call, Response<Trailers> response) {
-        if(response.isSuccessful()){
-            Trailers trailers = response.body();
-            String s = "";
-            for(Trailer trailer : trailers.getTrailers()){
-                s+=trailer.getKey()+"\n";
-            }
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage(s);
-            alert.show();
-        }
-    }
 
-    @Override
-    public void onFailure(Call<Trailers> call, Throwable t) {
-
-    }
 }

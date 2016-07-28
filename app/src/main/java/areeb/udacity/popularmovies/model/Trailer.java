@@ -31,6 +31,14 @@ public class Trailer {
         return key;
     }
 
+    public String getThumbnailURI(){
+        return "http://img.youtube.com/vi/"+getKey()+"/0.jpg";
+    }
+
+    public String getVideoLink(){
+        return "https://youtu.be/" + getKey();
+    }
+
     public void setKey(String key) {
         this.key = key;
     }

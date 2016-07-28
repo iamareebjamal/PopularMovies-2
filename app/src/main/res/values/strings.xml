@@ -13,6 +13,7 @@
 
     <string name="plot">Plot</string>
     <string name="trailer">Trailers</string>
+    <string name="no_trailer">No Trailers</string>
 
     <string name="movies_empty">No movies to show</string>
     <string name="movies_load_retry">Retry</string>
