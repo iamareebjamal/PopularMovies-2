@@ -13,7 +13,11 @@
 
     <string name="plot">Plot</string>
     <string name="trailer">Trailers</string>
+    <string name="loading_trailer">Loading Trailers...</string>
     <string name="no_trailer">No Trailers</string>
+    <string name="review">Reviews</string>
+    <string name="loading_review">Loading Reviews...</string>
+    <string name="no_review">No Reviews</string>
 
     <string name="movies_empty">No movies to show</string>
     <string name="movies_load_retry">Retry</string>
@@ -47,4 +51,8 @@
     <string name="dummy_plot" translatable="false">Once, there lived a great Android Developer, who tried
     his best to follow the coding standards set by professionals. But, for the world, his good practices were
     an eyesore. Will he survive the fiery criticism of the cruel world, or will succumb to his &#8230;</string>
+    <string name="dummy_review" translatable="false">Great movie but there was a sure lack of determinism in the content.
+    \nWhile I enjoy slow paced movies, this was gruelingly boring, it felt like I was living my life at 0.25x speed. Though
+     I am no expert, but I can easily do a better job at acting than Jimmy Olsen has done in this. The direction was not
+     up to the mark and I am sure Jaher needs to up his game.</string>
 </resources>

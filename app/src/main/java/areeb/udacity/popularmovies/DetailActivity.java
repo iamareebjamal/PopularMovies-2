@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import areeb.udacity.popularmovies.adapter.ReviewAdapter;
 import areeb.udacity.popularmovies.adapter.TrailerAdapter;
 import areeb.udacity.popularmovies.model.*;
 import areeb.udacity.popularmovies.utils.Utils;
@@ -83,6 +84,7 @@ public class DetailActivity extends AppCompatActivity {
 
             loadImages();
             loadTrailers();
+            loadReviews();
         }
     }
 
@@ -97,6 +99,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.genreIcon) ImageView genreIcon;
 
     @BindView(R.id.trailerHolder) TextView trailerHolder;
+    @BindView(R.id.reviewHolder) TextView reviewHolder;
 
     @BindColor(R.color.color_primary) int color;
     @BindColor(R.color.basic_dark_transparent) int titleColor;
@@ -124,6 +127,9 @@ public class DetailActivity extends AppCompatActivity {
 
                 trailerHolder.setBackgroundColor(color);
                 trailerHolder.setTextColor(titleColor);
+
+                reviewHolder.setBackgroundColor(color);
+                reviewHolder.setTextColor(titleColor);
 
                 infoPanel.setBackgroundColor(color);
 
@@ -178,6 +184,36 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onError() {
+            }
+        });
+    }
+
+    @BindView(R.id.reviews)
+    RecyclerView reviewsRv;
+    private void loadReviews(){
+        final ReviewAdapter reviewAdapter = new ReviewAdapter(this, new Reviews());
+        reviewsRv.setAdapter(reviewAdapter);
+
+        reviewsRv.setLayoutManager(new LinearLayoutManager(this));
+        final Call<Reviews> reviewsCall = movie.getReviewsCall();
+        reviewsCall.enqueue(new Callback<Reviews>() {
+            @Override
+            public void onResponse(Call<Reviews> call, Response<Reviews> response) {
+                Reviews reviews = response.body();
+                reviewAdapter.changeReviews(reviews);
+
+                if(reviews.getReviews().size()==0){
+                    reviewsRv.setVisibility(View.GONE);
+                    reviewHolder.setText(R.string.no_review);
+                } else {
+                    reviewsRv.setVisibility(View.VISIBLE);
+                    reviewHolder.setText(R.string.review);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Reviews> call, Throwable t) {
+
             }
         });
     }

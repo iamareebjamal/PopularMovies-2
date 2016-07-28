@@ -32,7 +32,7 @@ public class Trailer {
     }
 
     public String getThumbnailURI(){
-        return "http://img.youtube.com/vi/"+getKey()+"/0.jpg";
+        return "http://img.youtube.com/vi/"+getKey()+"/default.jpg";
     }
 
     public String getVideoLink(){
