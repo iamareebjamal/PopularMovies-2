@@ -11,6 +11,8 @@ import areeb.udacity.popularmovies.model.Movie;
 
 public class DetailActivity extends AppCompatActivity {
     private Movie movie;
+    private static final String FRAGMENT_KEY = "Fragment";
+    private DetailFragment newFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,10 +20,20 @@ public class DetailActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra(Movie.TAG)) {
             movie = getIntent().getParcelableExtra(Movie.TAG);
-            DetailFragment newFragment = DetailFragment.newInstance(movie);
+            if(savedInstanceState!=null && savedInstanceState.containsKey(FRAGMENT_KEY))
+                newFragment = (DetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, FRAGMENT_KEY);
+            else
+                newFragment = DetailFragment.newInstance(movie);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(android.R.id.content, newFragment).commit();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        getSupportFragmentManager().putFragment(outState, FRAGMENT_KEY, newFragment);
     }
 
     public void setBackButton(Toolbar toolbar){

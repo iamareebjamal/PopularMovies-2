@@ -20,6 +20,7 @@ import areeb.udacity.popularmovies.api.MovieService;
 import areeb.udacity.popularmovies.api.Sort;
 import areeb.udacity.popularmovies.model.Movie;
 import areeb.udacity.popularmovies.model.Movies;
+import areeb.udacity.popularmovies.utils.MovieSelector;
 import areeb.udacity.popularmovies.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +43,8 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
     private View rootView;
     private MovieAdapter movieAdapter;
     private Movies movies;
+
+    public static MovieSelector movieSelector;
 
     public MoviesFragment() {
         // Required empty public constructor
@@ -81,11 +84,15 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        movieSelector = (MovieSelector) getActivity();
+
         if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_KEY)) {
             List<Movie> list = savedInstanceState.getParcelableArrayList(MOVIE_KEY);
             movies = new Movies(list);
             movieAdapter.changeDataSet(movies);
             rootView.findViewById(R.id.hidden).setVisibility(View.GONE);
+            if(MainActivity.isDualPane() && movies.getMovies().size() > 0)
+                movieSelector.onSelect(movies.getMovies().get(0));
         } else {
             Call<Movies> call = MovieService.getMoviesCall(sortType);
             call.enqueue(this);
@@ -108,9 +115,9 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
         movieAdapter = new MovieAdapter(getActivity(), movies);
         recyclerView.setAdapter(movieAdapter);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        /*if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             columns = 4;
-        }
+        }*/
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columns));
         Utils.setScrollBehavior(fab, recyclerView);
@@ -166,6 +173,9 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
             rootView.findViewById(R.id.hidden).setVisibility(View.GONE);
 
             ((MainActivity) getActivity()).setTitle(sortType.toString() + " Movies");
+
+            if(MainActivity.isDualPane())
+                movieSelector.onSelect(movies.getMovies().get(0));
         }
     }
 

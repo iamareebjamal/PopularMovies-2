@@ -1,19 +1,25 @@
 package areeb.udacity.popularmovies;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import areeb.udacity.popularmovies.api.Sort;
+import areeb.udacity.popularmovies.fragment.DetailFragment;
 import areeb.udacity.popularmovies.fragment.MoviesFragment;
+import areeb.udacity.popularmovies.model.Movie;
+import areeb.udacity.popularmovies.utils.MovieSelector;
 import areeb.udacity.popularmovies.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieSelector {
 
     private static final String FRAGMENT_KEY = "movie_fragment";
 
-    private MoviesFragment moviesFragment;
+    private static MoviesFragment moviesFragment;
+    private static DetailFragment detailFragment;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
@@ -25,14 +31,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
-            moviesFragment = MoviesFragment.newInstance(Sort.POPULAR);
+            moviesFragment = (MoviesFragment) getSupportFragmentManager().findFragmentById(R.id.mainFragment);
         } else {
             moviesFragment = (MoviesFragment) getSupportFragmentManager().getFragment(savedInstanceState, FRAGMENT_KEY);
         }
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.root_frame, moviesFragment)
-                .commit();
+        detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.detailFragment);
+
     }
 
     public void setTitle(String title) {
@@ -68,5 +73,14 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         getSupportFragmentManager().putFragment(outState, FRAGMENT_KEY, moviesFragment);
+    }
+
+    @Override
+    public void onSelect(Movie movie) {
+        detailFragment.setMovie(movie);
+    }
+
+    public static boolean isDualPane(){
+        return (detailFragment==null)?false:detailFragment.isInLayout();
     }
 }

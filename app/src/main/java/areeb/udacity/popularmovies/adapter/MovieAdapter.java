@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import areeb.udacity.popularmovies.DetailActivity;
+import areeb.udacity.popularmovies.MainActivity;
 import areeb.udacity.popularmovies.R;
+import areeb.udacity.popularmovies.fragment.MoviesFragment;
 import areeb.udacity.popularmovies.model.Movie;
 import areeb.udacity.popularmovies.model.Movies;
 import areeb.udacity.popularmovies.utils.Utils;
@@ -68,9 +70,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra(Movie.TAG, movie);
-                context.startActivity(intent);
+                if(MainActivity.isDualPane()){
+                    MoviesFragment.movieSelector.onSelect(movie);
+                } else {
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra(Movie.TAG, movie);
+                    context.startActivity(intent);
+                }
             }
         });
 

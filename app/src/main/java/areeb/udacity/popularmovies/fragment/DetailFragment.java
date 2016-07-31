@@ -12,6 +12,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +119,11 @@ public class DetailFragment extends Fragment {
 
         if (movie != null) {
             setupViews();
-            ((DetailActivity) getActivity()).setBackButton(toolbar);
+            try {
+                ((DetailActivity) getActivity()).setBackButton(toolbar);
+            } catch (ClassCastException e) {
+                Log.d("Wrong Activity", "Invoked on Wrong activity");
+            }
         }
 
         return rootView;
@@ -126,6 +131,8 @@ public class DetailFragment extends Fragment {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
+        reviews = null;
+        trailers = null;
         setupViews();
     }
 
@@ -212,6 +219,7 @@ public class DetailFragment extends Fragment {
     private void loadReviews() {
         final ReviewAdapter reviewAdapter = new ReviewAdapter(getContext(), new Reviews());
         reviewsRv.setAdapter(reviewAdapter);
+        reviewsRv.setNestedScrollingEnabled(false);
 
         reviewsRv.setLayoutManager(new LinearLayoutManager(getContext()));
         if (reviews != null) {
@@ -245,6 +253,7 @@ public class DetailFragment extends Fragment {
     private void loadTrailers() {
         final TrailerAdapter trailerAdapter = new TrailerAdapter(getContext(), new Trailers());
         trailersRv.setAdapter(trailerAdapter);
+        trailersRv.setNestedScrollingEnabled(false);
 
         trailersRv.setLayoutManager(new LinearLayoutManager(getContext()));
         if (trailers != null) {
