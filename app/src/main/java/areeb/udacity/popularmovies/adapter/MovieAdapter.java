@@ -2,6 +2,7 @@ package areeb.udacity.popularmovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import areeb.udacity.popularmovies.DetailActivity;
 import areeb.udacity.popularmovies.MainActivity;
@@ -85,7 +87,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
             @Override
             public void onSuccess() {
                 holder.rootView.setVisibility(View.VISIBLE);
-                Utils.from(context).colorize(holder.posterHolder, holder.moviePanel);
+                Utils.from(context).colorize(holder);
             }
 
             @Override
@@ -102,10 +104,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     }
 
     public class MovieHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.rootcard) CardView rootView;
-        @BindView(R.id.poster_holder) ImageView posterHolder;
-        @BindView(R.id.movie_title) TextView movieTitle;
-        @BindView(R.id.movie_panel) LinearLayout moviePanel;
+        @BindView(R.id.rootcard) public CardView rootView;
+        @BindView(R.id.poster_holder) public ImageView posterHolder;
+        @BindView(R.id.movie_title) public TextView movieTitle;
+        @BindView(R.id.movie_panel) public RelativeLayout moviePanel;
+        @BindView(R.id.like) public ImageView favourite;
 
         public MovieHolder(View itemView) {
             super(itemView);

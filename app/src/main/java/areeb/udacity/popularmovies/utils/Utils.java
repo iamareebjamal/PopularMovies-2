@@ -11,11 +11,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import areeb.udacity.popularmovies.R;
+import areeb.udacity.popularmovies.adapter.MovieAdapter;
 import areeb.udacity.popularmovies.model.Movie;
 
 public class Utils {
@@ -88,17 +90,16 @@ public class Utils {
         return builder.toString();
     }
 
-    public void colorize(ImageView from, final LinearLayout to) {
-        if (from == null || to == null || from.getDrawable() == null)
+    public void colorize(final MovieAdapter.MovieHolder holder) {
+        if (holder.posterHolder == null || holder.moviePanel == null || holder.posterHolder.getDrawable() == null)
             return;
 
-        Bitmap bitmap = ((BitmapDrawable) from.getDrawable()).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) holder.posterHolder.getDrawable()).getBitmap();
 
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-                TextView title = (TextView) to.findViewById(R.id.movie_title);
 
                 int bgColor = context.getResources().getColor(R.color.basic_light);
                 int textColor = context.getResources().getColor(R.color.basic_dark);
@@ -108,8 +109,10 @@ public class Utils {
                     textColor = swatch.getTitleTextColor();
                 }
 
-                to.setBackgroundColor(bgColor);
-                title.setTextColor(textColor);
+                holder.moviePanel.setBackgroundColor(bgColor);
+                holder.movieTitle.setTextColor(textColor);
+
+                setTint(holder.favourite, textColor);
             }
         });
     }
