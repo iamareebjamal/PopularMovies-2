@@ -3,16 +3,15 @@ package areeb.udacity.popularmovies.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.VectorDrawable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 import areeb.udacity.popularmovies.DetailActivity;
 import areeb.udacity.popularmovies.MainActivity;
 import areeb.udacity.popularmovies.R;
@@ -24,12 +23,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
 
     private static final String TAG = "Movie Adapter";
+    private Realm realm;
 
     private Context context;
     private List<Movie> movies;
@@ -37,11 +39,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
+
+        Realm.init(context);
+        realm = Realm.getDefaultInstance();
     }
 
     public MovieAdapter(Context context, Movies movies) {
         this.context = context;
         this.movies = movies.getMovies();
+
+        Realm.init(context);
+        realm = Realm.getDefaultInstance();
     }
 
     public void changeDataSet(Movies movies) {
@@ -82,6 +90,32 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
             }
         });
 
+        final RealmResults<Movie> result = realm.where(Movie.class).equalTo("id", movie.getId()).findAll();
+        if(result.size()>0){
+            holder.favourite.setImageDrawable(VectorDrawableCompat.create(context.getResources(),R.drawable.vector_like, null));
+        } else {
+            holder.favourite.setImageDrawable(VectorDrawableCompat.create(context.getResources(),R.drawable.vector_unlike, null));
+        }
+
+        holder.favourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                realm.beginTransaction();
+
+                if(result.size()>0){
+                    result.deleteFirstFromRealm();
+                    holder.favourite.setImageDrawable(VectorDrawableCompat.create(context.getResources(),R.drawable.vector_unlike, null));
+                    Toast.makeText(context, movie.getTitle() + " deleted from favourites", Toast.LENGTH_SHORT).show();
+                } else {
+                    realm.copyToRealm(movie);
+                    holder.favourite.setImageDrawable(VectorDrawableCompat.create(context.getResources(),R.drawable.vector_like, null));
+                    Toast.makeText(context, movie.getTitle() + " added to favourites", Toast.LENGTH_SHORT).show();
+                }
+                Utils.setTint(holder.favourite, holder.textColor);
+                realm.commitTransaction();
+            }
+        });
+
         Picasso.with(context).load(movie.getPoster()).into(holder.posterHolder, new Callback() {
 
             @Override
@@ -109,6 +143,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         @BindView(R.id.movie_title) public TextView movieTitle;
         @BindView(R.id.movie_panel) public RelativeLayout moviePanel;
         @BindView(R.id.like) public ImageView favourite;
+
+        public int textColor;
 
         public MovieHolder(View itemView) {
             super(itemView);

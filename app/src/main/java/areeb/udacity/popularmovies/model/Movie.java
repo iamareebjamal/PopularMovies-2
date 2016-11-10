@@ -12,13 +12,16 @@ import areeb.udacity.popularmovies.BuildConfig;
 import areeb.udacity.popularmovies.api.MovieService;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import retrofit2.Call;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Movie implements Parcelable {
+public class Movie extends RealmObject implements Parcelable {
 
     public static final String TAG = "Movie";
 
@@ -76,6 +79,7 @@ public class Movie implements Parcelable {
     private String backdrop;
     @Expose
     @SerializedName("id")
+    @PrimaryKey
     private Integer id;
     @Expose
     @SerializedName("vote_average")
@@ -84,7 +88,9 @@ public class Movie implements Parcelable {
     /* Parcelable Methods */
     @Expose
     @SerializedName("genre_ids")
-    private List<Integer> genreIds = new ArrayList<>();
+    private RealmList<RealmInt> genreIds = new RealmList<>();
+
+    public Movie(){}
 
     private Movie(Parcel in) {
         poster = in.readString();
@@ -95,8 +101,8 @@ public class Movie implements Parcelable {
         backdrop = in.readString();
         id = in.readInt();
         rating = in.readDouble();
-        genreIds = new ArrayList<>();
-        in.readList(genreIds, List.class.getClassLoader());
+        genreIds = new RealmList<>();
+        in.readList(genreIds, RealmList.class.getClassLoader());
     }
 
     @Override
@@ -141,18 +147,18 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-    public List<Integer> getGenreIds() {
+    public RealmList<RealmInt> getGenreIds() {
         return genreIds;
     }
 
-    public void setGenreIds(List<Integer> genreIds) {
+    public void setGenreIds(RealmList genreIds) {
         this.genreIds = genreIds;
     }
 
     public String getGenres() {
         String genreString = new String();
-        for (Integer id : genreIds) {
-            genreString += genre.get(id) + ", ";
+        for (RealmInt id : genreIds) {
+            genreString += genre.get(id.val) + ", ";
         }
 
         return genreString.substring(0, genreString.lastIndexOf(","));

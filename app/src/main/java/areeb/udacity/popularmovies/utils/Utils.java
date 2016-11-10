@@ -113,6 +113,7 @@ public class Utils {
                 holder.movieTitle.setTextColor(textColor);
 
                 setTint(holder.favourite, textColor);
+                holder.textColor = textColor;
             }
         });
     }
