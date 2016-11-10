@@ -25,7 +25,6 @@ android {
         versionName "1.0"
 
         buildConfigField "String", "API_KEY", '**API_KEY**'
-
         generatedDensities = []
     }
 
