@@ -115,9 +115,9 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
         movieAdapter = new MovieAdapter(getActivity(), movies);
         recyclerView.setAdapter(movieAdapter);
 
-        /*if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !MainActivity.isDualPane()) {
             columns = 4;
-        }*/
+        }
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columns));
         Utils.setScrollBehavior(fab, recyclerView);
