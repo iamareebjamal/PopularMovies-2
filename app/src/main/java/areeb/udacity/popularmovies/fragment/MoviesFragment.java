@@ -115,7 +115,7 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
         movieAdapter = new MovieAdapter(getActivity(), movies);
         recyclerView.setAdapter(movieAdapter);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !MainActivity.isDualPane()) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !isTablet()) {
             columns = 4;
         }
 
@@ -142,6 +142,12 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
                 return true;
             }
         });
+    }
+
+    public boolean isTablet() {
+        boolean xlarge = ((getContext().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+        boolean large = ((getContext().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return (xlarge || large);
     }
 
     private void setRandomLoadingMessage() {

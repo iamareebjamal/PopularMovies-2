@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity implements MovieSelector {
         if (id == R.id.action_favorite) {
             Realm.init(this);
             Realm realm = Realm.getDefaultInstance();
-            RealmResults<Movie> movieResults = realm.where(Movie.class).findAll();
-            List<Movie> movieList = realm.copyFromRealm(movieResults);
-            moviesFragment.loadMovies(new Movies(movieList));
+            moviesFragment.loadMovies(new Movies(realm.copyFromRealm(realm.where(Movie.class).findAll())));
             return true;
         }
 
