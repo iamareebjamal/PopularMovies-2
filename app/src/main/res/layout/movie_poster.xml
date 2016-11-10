@@ -40,7 +40,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/vector_unlike"
+                app:srcCompat="@drawable/vector_unlike"
                 tools:ignore="MissingPrefix"/>
 
     </RelativeLayout>
