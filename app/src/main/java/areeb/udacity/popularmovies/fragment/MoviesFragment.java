@@ -162,6 +162,20 @@ public class MoviesFragment extends Fragment implements Callback<Movies> {
         rootView.findViewById(R.id.hidden).setVisibility(View.VISIBLE);
     }
 
+    public void loadMovies(Movies movies){
+        this.movies = movies;
+        movieAdapter.changeDataSet(movies);
+
+        Snackbar.make(rootView, getActivity().getString(R.string.movies_load_success), Snackbar.LENGTH_SHORT).show();
+
+        rootView.findViewById(R.id.hidden).setVisibility(View.GONE);
+
+        ((MainActivity) getActivity()).setTitle("Favorite Movies");
+
+        if(MainActivity.isDualPane())
+            movieSelector.onSelect(movies.getMovies().get(0));
+    }
+
 
     @Override
     public void onResponse(Call<Movies> call, Response<Movies> response) {

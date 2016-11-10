@@ -4,7 +4,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".MainActivity">
     <item
-            android:id="@+id/action_settings"
-            android:orderInCategory="100"
-            app:showAsAction="never"/>
+            android:id="@+id/action_favorite"
+            android:title="Favorites"
+            android:icon="@drawable/vector_like"
+            app:showAsAction="always"/>
 </menu>

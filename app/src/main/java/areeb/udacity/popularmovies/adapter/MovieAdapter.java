@@ -76,6 +76,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         holder.moviePanel.setBackgroundColor(context.getResources().getColor(R.color.basic_light));
         holder.movieTitle.setTextColor(context.getResources().getColor(R.color.basic_dark));
 
+        Utils.setTint(holder.favourite, Color.parseColor("#99000000"));
+
         holder.rootView.setPreventCornerOverlap(false);
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override

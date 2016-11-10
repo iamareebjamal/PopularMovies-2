@@ -5,14 +5,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import areeb.udacity.popularmovies.api.Sort;
 import areeb.udacity.popularmovies.fragment.DetailFragment;
 import areeb.udacity.popularmovies.fragment.MoviesFragment;
 import areeb.udacity.popularmovies.model.Movie;
+import areeb.udacity.popularmovies.model.Movies;
 import areeb.udacity.popularmovies.utils.MovieSelector;
 import areeb.udacity.popularmovies.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MovieSelector {
 
@@ -44,29 +52,29 @@ public class MainActivity extends AppCompatActivity implements MovieSelector {
         toolbar.setTitle(Utils.clean(title));
     }
 
-    /*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_favorite) {
+            Realm.init(this);
+            Realm realm = Realm.getDefaultInstance();
+            RealmResults<Movie> movieResults = realm.where(Movie.class).findAll();
+            List<Movie> movieList = realm.copyFromRealm(movieResults);
+            moviesFragment.loadMovies(new Movies(movieList));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-    */
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
